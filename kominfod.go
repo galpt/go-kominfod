@@ -7,6 +7,14 @@ import (
 	"time"
 )
 
+type JsonOutput struct {
+	ExecTime    string `json:"execTime"`
+	Domain      string `json:"domain"`
+	DomainIndex int    `json:"domainIndex"`
+	IsSubdomain bool   `json:"isSubdomain"`
+	IsBlocked   bool   `json:"isBlocked"`
+}
+
 // fungsi ini akan membuat program secara otomatis
 // mengupdate domain list setiap 1 jam.
 func domainsFetch() {
@@ -44,7 +52,7 @@ func domainsFetch() {
 		}
 
 		// lakukan print sebagi indikasi bahwa data sudah berhasil diproses
-		sizeinfo := fmt.Sprintf("Downloading %v KB | %v MB", (writeFile / Kilobyte), (writeFile / Megabyte))
+		sizeinfo := fmt.Sprintf("Processed %v KB | %v MB", (writeFile / Kilobyte), (writeFile / Megabyte))
 		fmt.Println(sizeinfo)
 
 		// tutup io setelah selesai menulis data

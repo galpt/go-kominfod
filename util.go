@@ -5,7 +5,6 @@ import (
 	"strings"
 )
 
-// custom strings.Split
 func strSplit(s, sep string) ([]string, error) {
 	result := strings.Split(s, sep)
 
@@ -14,4 +13,22 @@ func strSplit(s, sep string) ([]string, error) {
 	}
 
 	return result, nil
+}
+
+func contains(elems []string, v string) bool {
+	for _, s := range elems {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}
+
+func chkIdx(elems []string, v string) int {
+	for idx, s := range elems {
+		if v == s {
+			return idx
+		}
+	}
+	return 0
 }

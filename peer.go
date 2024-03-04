@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/huandu/xstrings"
 	"github.com/spf13/afero"
 )
 
@@ -42,15 +43,12 @@ func peer() {
 	ginroute.GET("/kominfod", func(c *gin.Context) {
 
 		var (
-			resultJson       []JsonOutput
-			query            string
-			queryList        []string
-			domainList       []string
-			isBlocked        = false
-			isSubdomain      = false
-			domainBlockedIdx = 0
+			resultJson []JsonOutput
+			query      string
+			queryList  []string
+			domainList []string
 		)
-		query = c.DefaultQuery("domain", "google.com")
+		query = c.DefaultQuery("domain", "")
 		queryList = nil
 		domainList = nil
 
@@ -79,60 +77,51 @@ func peer() {
 
 				timestampMulti := time.Now()
 
-				for domainIdx := range domainList {
+				if contains(domainList, queryList[qryIdx]) {
 
-					if domainList[domainIdx] == queryList[qryIdx] {
-						isBlocked = true
-						domainBlockedIdx = (domainIdx + 1)
-						break
-					} else if strings.Contains(queryList[qryIdx], domainList[domainIdx]) {
-						isBlocked = true
-						isSubdomain = true
-						domainBlockedIdx = (domainIdx + 1)
-						break
+					if xstrings.Count(queryList[qryIdx], ".") > 1 {
+						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: true, IsBlocked: true})
+
 					} else {
-						isBlocked = false
-						isSubdomain = false
-						domainBlockedIdx = 0
+						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: false, IsBlocked: true})
+
 					}
-				}
+				} else if !contains(domainList, queryList[qryIdx]) {
 
-				if isBlocked {
-					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: domainBlockedIdx, IsSubdomain: isSubdomain, IsBlocked: isBlocked})
+					if xstrings.Count(queryList[qryIdx], ".") > 1 {
+						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: true, IsBlocked: false})
 
-				} else {
-					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: domainBlockedIdx, IsSubdomain: isSubdomain, IsBlocked: isBlocked})
+					} else {
+						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: false, IsBlocked: false})
+
+					}
+
 				}
 
 			}
 		} else {
+
 			timestampSingle := time.Now()
 
-			for domainIdx := range domainList {
+			if contains(domainList, query) {
 
-				timestampSingle = time.Now()
+				if xstrings.Count(query, ".") > 1 {
+					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: true, IsBlocked: true})
 
-				if domainList[domainIdx] == query {
-					isBlocked = true
-					domainBlockedIdx = (domainIdx + 1)
-					break
-				} else if strings.Contains(query, domainList[domainIdx]) {
-					isBlocked = true
-					isSubdomain = true
-					domainBlockedIdx = (domainIdx + 1)
-					break
 				} else {
-					isBlocked = false
-					domainBlockedIdx = 0
+					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: false, IsBlocked: true})
+
+				}
+			} else if !contains(domainList, query) {
+
+				if xstrings.Count(query, ".") > 1 {
+					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: true, IsBlocked: false})
+
+				} else {
+					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: false, IsBlocked: false})
+
 				}
 
-			}
-
-			if isBlocked {
-				resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: domainBlockedIdx, IsSubdomain: isSubdomain, IsBlocked: isBlocked})
-
-			} else {
-				resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: domainBlockedIdx, IsSubdomain: isSubdomain, IsBlocked: isBlocked})
 			}
 
 		}

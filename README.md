@@ -37,9 +37,9 @@ Ada beberapa hal yang dapat diharapkan dari implementasi ini, yaitu:
 
 Cara kerja `go-kominfod` jika dijelaskan setiap langkah, yaitu:
 1. Saat program baru dijalankan, program akan mengunduh file [domains](https://raw.githubusercontent.com/lepasid/blocklist/main/domains) lalu disimpan di memory.
-2. Ketika pengguna mengirim request ke `/kominfod`, secara default program akan mengecek apakah `google.com` diblokir atau tidak.
-3. Jika pengguna menggunakan format `/kominfod?domain=`, maka program akan mengecek apakah domain tersebut diblokir atau tidak.
-4. Jika pengguna menggunakan format `/kominfod?domain=google.com,facebook.com`, maka program akan mengecek seluruh domain tersebut apakah diblokir atau tidak.
+2. Ketika pengguna mengirim request ke `/kominfod`, secara default program akan melakukan cek terhadap empty string ("").
+3. Jika pengguna menggunakan format `/kominfod?domain=`, maka program akan melakukan cek apakah domain tersebut diblokir atau tidak.
+4. Jika pengguna menggunakan format `/kominfod?domain=google.com,facebook.com`, maka program akan melakukan cek terhadap seluruh domain tersebut apakah diblokir atau tidak.
 5. Program akan melakukan update file [domains](https://raw.githubusercontent.com/lepasid/blocklist/main/domains) setiap 1 jam sekali.
 
 * * *

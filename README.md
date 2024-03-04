@@ -12,7 +12,7 @@
 * * *
 
 ## Pengenalan
-#### [:arrow_up: Go to Table of Contents](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
+#### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
 `go-kominfod` adalah sebuah implementasi *low latency* yang diadaptasi dari proyek [kominfod](https://github.com/lepasid/kominfod), ditulis dalam bahasa Go.
 
@@ -23,21 +23,17 @@ Kata *"low latency"* yang dimaksud disini adalah kemampuan program ini untuk mem
 * * *
 
 ## Apa yang dapat diharapkan?
-#### [:arrow_up: Go to Table of Contents](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
+#### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
 Ada beberapa hal yang dapat diharapkan dari implementasi ini, yaitu:
 1. Dirancang untuk low latency. Rerata request diproses dalam waktu 100ms - 200ms.
 2. Tidak melakukan proses baca-tulis ke disk sama sekali.
 3. Secara teori dapat memproses jutaan request dengan cepat karena menggunakan library yang sudah diuji seperti [Gin](https://github.com/gin-gonic/gin) dan [Afero](https://github.com/spf13/afero).
 
-> [!NOTE]
->
-> Just set `maxDL` and `maxUL` based on whatever speed advertised by your ISP. No need to limit them to 90% or something like that. The code logic will try to handle that automatically.
-
 * * *
 
 ## Cara kerja
-#### [:arrow_up: Go to Table of Contents](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
+#### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
 Cara kerja `go-kominfod` jika dijelaskan setiap langkah, yaitu:
 1. Saat program baru dijalankan, program akan mengunduh file [domains](https://raw.githubusercontent.com/lepasid/blocklist/main/domains) lalu disimpan di memory.
@@ -48,7 +44,7 @@ Cara kerja `go-kominfod` jika dijelaskan setiap langkah, yaitu:
 * * *
 
 ## Cara compile kode
-#### [:arrow_up: Go to Table of Contents](https://github.com/galpt/dnscrypt-cake?tab=readme-ov-file#table-of-contents)
+#### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
 1. Download dan install [bahasa pemrograman Go](https://go.dev/).
 2. Download repository ini dan extract ke sebuah folder baru yang masih kosong.
@@ -61,13 +57,14 @@ $ go build
 ```
 
 > [!IMPORTANT]
-> 1. Jalankan file yang sudah di-compile dengan `sudo` (untuk linux) atau `Run as administrator` (untuk windows) jika diperlukan.
+> 1. Jalankan file yang sudah di-compile dengan `sudo` (untuk Linux) atau `Run as administrator` (untuk Windows) jika diperlukan.
 > 2. Izinkanlah jika ada pop-up firewall untuk memberi izin program mengakses port `7777` (default).
+> 3. Ubah `CertFilePath` dan `KeyFilePath` pada file `vars.go` sesuai lokasi sertifikat SSL yang ingin digunakan.
 
 * * *
 
 ## Lihat `go-kominfod` secara langsung
-#### [:arrow_up: Go to Table of Contents](https://github.com/galpt/dnscrypt-cake?tab=readme-ov-file#table-of-contents)
+#### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
 Anda dapat melihat `go-kominfod` yang dijalankan di server kami dengan mengakses link berikut:
 
@@ -76,8 +73,8 @@ https://net.0ms.dev:7777/kominfod?domain=google.com,facebook.com
 * * *
 
 ## Credits
-#### [:arrow_up: Go to Table of Contents](https://github.com/galpt/dnscrypt-cake?tab=readme-ov-file#table-of-contents)
+#### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
-Implementasi ini memungkinkan untuk dibuat dengan menggunakan hal-hal lain yang disediakan oleh para developer dan/atau perusahaan yang disebut di petunjuk ini.
+Implementasi ini memungkinkan untuk dibuat dengan menggunakan hal-hal lain yang disediakan oleh para developer dan/atau perusahaan yang disebut disini.
 
 Semua kredit dan hak cipta diberikan kepada masing-masing pemilik.

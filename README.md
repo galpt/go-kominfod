@@ -3,10 +3,10 @@
 ## Daftar Isi
 
 1. [Pengenalan](https://github.com/galpt/go-kominfod?tab=readme-ov-file#pengenalan)
-2. [Apa yang dapat diharapkan?](https://github.com/galpt/go-kominfod?tab=readme-ov-file#what-to-expect)
-3. [Cara kerja](https://github.com/galpt/go-kominfod?tab=readme-ov-file#how-it-works)
-4. [Cara compile kode](https://github.com/galpt/go-kominfod?tab=readme-ov-file#how-to-compile-the-code)
-5. [Lihat go-kominfod secara langsung](https://github.com/galpt/go-kominfod?tab=readme-ov-file#see-go-kominfod-in-action)
+2. [Apa yang dapat diharapkan?](https://github.com/galpt/go-kominfod?tab=readme-ov-file#apa-yang-dapat-diharapkan)
+3. [Cara kerja](https://github.com/galpt/go-kominfod?tab=readme-ov-file#cara-kerja)
+4. [Cara compile kode](https://github.com/galpt/go-kominfod?tab=readme-ov-file#cara-compile-kode)
+5. [Lihat go-kominfod secara langsung](https://github.com/galpt/go-kominfod?tab=readme-ov-file#lihat-go-kominfod-secara-langsung)
 6. [Credits](https://github.com/galpt/go-kominfod?tab=readme-ov-file#credits)
 
 * * *

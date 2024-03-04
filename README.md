@@ -14,7 +14,7 @@
 ## Pengenalan
 #### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
-`go-kominfod` adalah sebuah implementasi *low latency* yang diadaptasi dari proyek [kominfod](https://github.com/lepasid/kominfod), ditulis dalam bahasa Go.
+`go-kominfod` adalah sebuah implementasi *low latency* yang diadaptasi dari proyek [kominfod](https://github.com/lepasid/kominfod), ditulis dalam bahasa pemrograman Go.
 
 Kata *"low latency"* yang dimaksud disini adalah kemampuan program ini untuk memproses permintaan dari pengguna dan memberikan respon balik dalam waktu sesingkat mungkin.
 

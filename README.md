@@ -26,7 +26,7 @@ Kata *"low latency"* yang dimaksud disini adalah kemampuan program ini untuk mem
 #### [:arrow_up: Kembali ke Daftar Isi](https://github.com/galpt/go-kominfod?tab=readme-ov-file#daftar-isi)
 
 Ada beberapa hal yang dapat diharapkan dari implementasi ini, yaitu:
-1. Dirancang untuk low latency. Rerata request diproses dalam waktu 100ms - 200ms.
+1. Dirancang untuk low latency. Rerata pencarian per-domain yang diblokir adalah 1ms - 10ms.
 2. Tidak melakukan proses baca-tulis ke disk sama sekali.
 3. Secara teori dapat memproses jutaan request dengan cepat karena menggunakan library yang sudah diuji seperti [Gin](https://github.com/gin-gonic/gin) dan [Afero](https://github.com/spf13/afero).
 

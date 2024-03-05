@@ -43,14 +43,22 @@ func peer() {
 	ginroute.GET("/kominfod", func(c *gin.Context) {
 
 		var (
-			resultJson []JsonOutput
-			query      string
-			queryList  []string
-			domainList []string
+			globalJson        []Global
+			domainsJson       []Domain
+			query             string
+			queryList         []string
+			queryTotal        int = 0
+			domainList        []string
+			timestampMultiArr []float64
+			timeAvgTotal      float64 = 0
 		)
 		query = c.DefaultQuery("domain", "")
+		timestampTotal := time.Now()
+		globalJson = nil
+		domainsJson = nil
 		queryList = nil
 		domainList = nil
+		timestampMultiArr = nil
 
 		// read the cached file
 		kominfodReadFile, err := afero.ReadFile(memFS, kominfodDir)
@@ -73,26 +81,36 @@ func peer() {
 				return
 			}
 
+			queryTotal = len(queryList)
+
 			for qryIdx := range queryList {
 
 				timestampMulti := time.Now()
 
 				if contains(domainList, queryList[qryIdx]) {
 
+					timeSinceMulti := time.Since(timestampMulti)
+					timestampMultiArr = append(timestampMultiArr, float64(timeSinceMulti))
+
 					if xstrings.Count(queryList[qryIdx], ".") > 1 {
-						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: true, IsBlocked: true})
+
+						domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceMulti/time.Millisecond), float64(timeSinceMulti/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: true, IsBlocked: true})
 
 					} else {
-						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: false, IsBlocked: true})
+						domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceMulti/time.Millisecond), float64(timeSinceMulti/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: false, IsBlocked: true})
 
 					}
+
 				} else if !contains(domainList, queryList[qryIdx]) {
 
+					timeSinceMulti := time.Since(timestampMulti)
+					timestampMultiArr = append(timestampMultiArr, float64(timeSinceMulti))
+
 					if xstrings.Count(queryList[qryIdx], ".") > 1 {
-						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: true, IsBlocked: false})
+						domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceMulti/time.Millisecond), float64(timeSinceMulti/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: true, IsBlocked: false})
 
 					} else {
-						resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampMulti)/time.Millisecond), float64(time.Since(timestampMulti)/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: false, IsBlocked: false})
+						domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceMulti/time.Millisecond), float64(timeSinceMulti/time.Microsecond)), Domain: queryList[qryIdx], DomainIndex: chkIdx(domainList, queryList[qryIdx]), IsSubdomain: false, IsBlocked: false})
 
 					}
 
@@ -101,24 +119,29 @@ func peer() {
 			}
 		} else {
 
+			queryTotal = 1
 			timestampSingle := time.Now()
 
 			if contains(domainList, query) {
 
+				timeSinceSingle := time.Since(timestampSingle)
+
 				if xstrings.Count(query, ".") > 1 {
-					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: true, IsBlocked: true})
+					domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceSingle/time.Millisecond), float64(timeSinceSingle/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: true, IsBlocked: true})
 
 				} else {
-					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: false, IsBlocked: true})
+					domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceSingle/time.Millisecond), float64(timeSinceSingle/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: false, IsBlocked: true})
 
 				}
 			} else if !contains(domainList, query) {
 
+				timeSinceSingle := time.Since(timestampSingle)
+
 				if xstrings.Count(query, ".") > 1 {
-					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: true, IsBlocked: false})
+					domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceSingle/time.Millisecond), float64(timeSinceSingle/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: true, IsBlocked: false})
 
 				} else {
-					resultJson = append(resultJson, JsonOutput{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(time.Since(timestampSingle)/time.Millisecond), float64(time.Since(timestampSingle)/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: false, IsBlocked: false})
+					domainsJson = append(domainsJson, Domain{ExecTime: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceSingle/time.Millisecond), float64(timeSinceSingle/time.Microsecond)), Domain: query, DomainIndex: chkIdx(domainList, query), IsSubdomain: false, IsBlocked: false})
 
 				}
 
@@ -126,7 +149,17 @@ func peer() {
 
 		}
 
-		c.IndentedJSON(http.StatusOK, resultJson)
+		timeSinceTotal := time.Since(timestampTotal)
+
+		for timestampIdx := range timestampMultiArr {
+			timeAvgTotal = float64(timeAvgTotal + timestampMultiArr[timestampIdx])
+		}
+		timeAvgTotal = float64(timeAvgTotal) / float64(len(timestampMultiArr))
+		timeAvgDuration := time.Duration(timeAvgTotal)
+
+		globalJson = append(globalJson, Global{ExecTimeTotal: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeSinceTotal/time.Millisecond), float64(timeSinceTotal/time.Microsecond)), ExecTimeAverage: fmt.Sprintf("%.2f ms | %.2f μs", float64(timeAvgDuration/time.Millisecond), float64(timeAvgDuration/time.Microsecond)), DomainQueryTotal: queryTotal, Domains: domainsJson})
+
+		c.IndentedJSON(http.StatusOK, globalJson)
 
 	})
 

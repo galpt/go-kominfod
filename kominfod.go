@@ -7,13 +7,22 @@ import (
 	"time"
 )
 
-type JsonOutput struct {
-	ExecTime    string `json:"execTime"`
-	Domain      string `json:"domain"`
-	DomainIndex int    `json:"domainIndex"`
-	IsSubdomain bool   `json:"isSubdomain"`
-	IsBlocked   bool   `json:"isBlocked"`
-}
+type (
+	Global struct {
+		ExecTimeTotal    string   `json:"execTimeTotal"`
+		ExecTimeAverage  string   `json:"execTimeAverage"`
+		DomainQueryTotal int      `json:"domainQueryTotal"`
+		Domains          []Domain `json:"domains"`
+	}
+
+	Domain struct {
+		ExecTime    string `json:"execTime"`
+		Domain      string `json:"domain"`
+		DomainIndex int    `json:"domainIndex"`
+		IsSubdomain bool   `json:"isSubdomain"`
+		IsBlocked   bool   `json:"isBlocked"`
+	}
+)
 
 // fungsi ini akan membuat program secara otomatis
 // mengupdate domain list setiap 1 jam.
